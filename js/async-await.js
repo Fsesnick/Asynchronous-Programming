@@ -3,7 +3,7 @@ const wikiUrl = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 const peopleList = document.getElementById('people');
 const btn = document.querySelector('button');
 
-// Handle all fetch requests
+// Lida com todas as solicitações de busca 
 async function getPeopleInSpace(url) {
   const peopleResponse = await fetch(url);
   const peopleJSON = await peopleResponse.json();
@@ -19,12 +19,12 @@ async function getPeopleInSpace(url) {
   return Promise.all(profiles);
 }
 
-// Generate the markup for each profile
+// Gera a marcação para cada perfil 
 function generateHTML(data) {
   data.map( person => {
     const section = document.createElement('section');
     peopleList.appendChild(section);
-    // Check if request returns a 'standard' page from Wiki
+    //Verifique se a solicitação retorna uma página 'padrão' do Wiki 
     if (person.type === 'standard') {
       section.innerHTML = `
         <img src=${person.thumbnail.source}>
@@ -44,10 +44,10 @@ function generateHTML(data) {
   });
 }
 
-btn.addEventListener('click', async (event) => {
-  event.target.textContent = 'Loading...';
+btn.addEventListener('click', (event) => {
+  event.target.textContent = 'Carregando...';
 
-  const astros = await getPeopleInSpace(astrosUrl);
-  generateHTML(astros);
-  event.target.remove();
+  getPeopleInSpace(astrosUrl)
+    .then(generateHTML)
+    .finally( () => event.target.remove() )
 });
