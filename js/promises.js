@@ -31,7 +31,7 @@ function generateHTML(data) {
   data.map( person => {
     const section = document.createElement('section');
     peopleList.appendChild(section);
-    // Check if request returns a 'standard' page from Wiki
+    // Verifique se a solicitação retorna uma pagina 'padrão' do Wiki 
     if (person.type === 'standard') {
       section.innerHTML = `
         <img src=${person.thumbnail.source}>
@@ -51,10 +51,14 @@ function generateHTML(data) {
 }
 
 btn.addEventListener('click', (event) => {
+  event.target.textContent = "Carregando...";
+
   getJSON(astrosUrl)
     .then(getProfiles)
     .then(generateHTML)
-    .catch( err => console.log(err) )
-
-  event.target.remove() 
+    .catch( err => {
+      peopleList.innerHTML = '<h3>Algo deu errado!</h3>';
+      console.log(err);
+    })
+    .finally( () => event.target.remove() )
 });
